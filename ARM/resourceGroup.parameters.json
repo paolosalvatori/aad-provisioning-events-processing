@@ -1,6 +1,6 @@
 {
   "resourceGroupName": {
-    "value": "ProcessUserAndGroupEvents"
+    "value": "AADEventsResourceGroup"
   },
   "resourceGroupLocation": {
     "value": "West Europe"

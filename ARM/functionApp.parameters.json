@@ -1,6 +1,6 @@
 {
   "resourceGroupName": {
-    "value": "ProcessUserAndGroupEvents"
+    "value": "AADFunctionAppResourceGroup"
   },
   "resourceGroupLocation": {
     "value": "West Europe"
@@ -20,7 +20,7 @@
   "consumerGroup": {
     "value": "ubs"
   },
-  "AzureActiveDirectoryName": {
+  "azureActiveDirectoryName": {
     "value": "Babo"
   },
   "debug": {
