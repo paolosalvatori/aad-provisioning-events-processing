@@ -1,0 +1,8 @@
+{
+  "resourceGroupName": {
+    "value": "ProcessUserAndGroupEvents"
+  },
+  "resourceGroupLocation": {
+    "value": "West Europe"
+  }
+}

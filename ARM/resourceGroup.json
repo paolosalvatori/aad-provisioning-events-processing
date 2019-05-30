@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "AADFunctionAppResourceGroup",
+      "metadata": {
+        "description": "The name of the resource group of the function app."
+      }
+    },
+    "resourceGroupLocation": {
+      "type": "string",
+      "defaultValue": "West Europe",
+      "metadata": {
+        "description": "The location of the resource group of the function app."
+      }
+    },
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2018-05-01",
+      "location": "[parameters('resourceGroupLocation')]",
+      "name": "[parameters('resourceGroupName')]",
+      "properties": {}
+    }
+  ],
+  "outputs": {}
+}

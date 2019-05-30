@@ -1,0 +1,38 @@
+{
+  "resourceGroupName": {
+    "value": "ProcessUserAndGroupEvents"
+  },
+  "resourceGroupLocation": {
+    "value": "West Europe"
+  },
+  "functionAppName": {
+    "value": "AzureActiveDirectoryFunctionApp"
+  },
+  "storageAccountName": {
+    "value": "<Storage Account Name>"
+  },
+  "eventHubConnectionString": {
+    "value": "<Event Hub Connection String>"
+  },
+  "eventHub": {
+    "value": "azure-ad-activity-log"
+  },
+  "consumerGroup": {
+    "value": "ubs"
+  },
+  "AzureActiveDirectoryName": {
+    "value": "Babo"
+  },
+  "debug": {
+    "value": "true"
+  },
+  "sendGridApiKey": {
+    "value": "<SendGrid API Key>"
+  },
+  "fromEmailAddress": {
+    "value": "administrator@babo.onmicrosoft.com"
+  },
+  "toEmailAddress": {
+    "value": "youremailaddress@somedomain.com"
+  }
+}
