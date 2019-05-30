@@ -1,47 +1,47 @@
 {
-    "jobName": {
-        "value": "ProcessUserAndGroupEvents"
-    },
-    "jobLocation": {
-        "value": "West Europe"
-    },
-    "jobQuery": {
-        "value": "WITH Records AS\r\n(\r\n    SELECT  \r\n            arrayElement.ArrayValue.properties as properties,\r\n            arrayElement.ArrayValue.operationName as operationName,\r\n            arrayElement.ArrayValue.category as eventCategory,\r\n            arrayElement.ArrayValue.tenantId as tenantId,\r\n            arrayElement.ArrayValue.time as time\r\n    FROM [EventHub] AS eh \r\n    CROSS APPLY GetArrayElements(eh.records) AS arrayElement\r\n),\r\nEvents AS\r\n(\r\n    SELECT \r\n            operationName,\r\n            eventCategory,\r\n            tenantId,\r\n            time,\r\n            properties.result as result,\r\n            properties.category as operationCategory,\r\n            properties.initiatedBy.[user].userPrincipalName as initiatedBy,\r\n            GetArrayElement(properties.targetResources, 0) as targetResource\r\n    FROM [Records]\r\n    WHERE eventCategory = 'AuditLogs'\r\n),\r\nItems AS\r\n(\r\n    SELECT \r\n            operationName,\r\n            eventCategory,\r\n            tenantId,\r\n            time,\r\n            result,\r\n            operationCategory,\r\n            initiatedBy,\r\n            targetResource.userPrincipalName as userPrincipalName,\r\n            targetResource.displayName as groupName,\r\n            targetResource.type as type,\r\n            GetArrayElement(targetResource.modifiedProperties, 1) as groupItem\r\n    FROM [Events]\r\n)\r\nSELECT\r\n    operationName,\r\n    operationCategory,\r\n    eventCategory,\r\n    result,\r\n    tenantId,\r\n    initiatedBy,\r\n    userPrincipalName,\r\n    CASE  \r\n        WHEN OperationName = 'Add member to group' OR \r\n             OperationName = 'Remove member from group'  THEN REPLACE(groupItem.newValue, '\"', '')\r\n        ELSE groupName   \r\n    END AS groupName,\r\n    type,\r\n    time\r\nINTO [ServiceBus]\r\nFROM [Items]\r\nWHERE\r\n    operationCategory = 'UserManagement' OR\r\n    operationCategory = 'GroupManagement'"
-    },
-    "jobStreamingUnits": {
-        "value": 6
-    },
-    "inputName": {
-        "value": "EventHub"
-    },
-    "inputEventHubNamespace": {
-        "value": "<name of the input Event Hub namespace>"
-    },
-    "inputEventHubName": {
-        "value": "<name of the input Event Hub where Azure Active Directory Activity Logs are sent>"
-    },
-    "inputEventHubConsumerGroupName": {
-        "value": "<name of the Consumer Group used by the Stream Analytics job>"
-    },
-    "inputEventHubSharedAccessPolicyName": {
-        "value": "RootManageSharedAccessKey"
-    },
-    "inputEventHubSharedAccessPolicyKey": {
-        "value": "<key of the Event Hub Shared Access Policy e.g. RootManageSharedAccessKey>"
-    },
-    "outputName": {
-        "value": "ServiceBus"
-    },
-    "outputServiceBusNamespace": {
-        "value": "<name of the output Service Bus namespace>"
-    },
-    "outputServiceBusQueue": {
-        "value": "<name of the Service Bus queue where the Stream Analytics job writes results>"
-    },
-    "outputServiceBusSharedAccessPolicyName": {
-        "value": "RootManageSharedAccessKey"
-    },
-    "outputServiceBusSharedAccessPolicyKey": {
-        "value": "<key of the Service Bus Shared Access Policy e.g. RootManageSharedAccessKey>"
-    }
+  "jobName": {
+    "value": "ProcessUserAndGroupEvents"
+  },
+  "jobLocation": {
+    "value": "West Europe"
+  },
+  "jobQuery": {
+    "value": "WITH Records AS\r\n(\r\n    SELECT  \r\n            arrayElement.ArrayValue.properties as properties,\r\n            arrayElement.ArrayValue.operationName as operationName,\r\n            arrayElement.ArrayValue.category as eventCategory,\r\n            arrayElement.ArrayValue.tenantId as tenantId,\r\n            arrayElement.ArrayValue.time as time\r\n    FROM [EventHub] AS eh \r\n    CROSS APPLY GetArrayElements(eh.records) AS arrayElement\r\n),\r\nEvents AS\r\n(\r\n    SELECT \r\n            operationName,\r\n            eventCategory,\r\n            tenantId,\r\n            time,\r\n            properties.result as result,\r\n            properties.category as operationCategory,\r\n            properties.initiatedBy.[user].userPrincipalName as initiatedBy,\r\n            GetArrayElement(properties.targetResources, 0) as targetResource\r\n    FROM [Records]\r\n    WHERE eventCategory = 'AuditLogs'\r\n),\r\nItems AS\r\n(\r\n    SELECT \r\n            operationName,\r\n            eventCategory,\r\n            tenantId,\r\n            time,\r\n            result,\r\n            operationCategory,\r\n            initiatedBy,\r\n            targetResource.userPrincipalName as userPrincipalName,\r\n            targetResource.displayName as groupName,\r\n            targetResource.type as type,\r\n            GetArrayElement(targetResource.modifiedProperties, 1) as groupItem\r\n    FROM [Events]\r\n)\r\nSELECT\r\n    operationName,\r\n    operationCategory,\r\n    eventCategory,\r\n    result,\r\n    tenantId,\r\n    initiatedBy,\r\n    userPrincipalName,\r\n    CASE  \r\n        WHEN OperationName = 'Add member to group' OR \r\n             OperationName = 'Remove member from group'  THEN REPLACE(groupItem.newValue, '\"', '')\r\n        ELSE groupName   \r\n    END AS groupName,\r\n    type,\r\n    time\r\nINTO [ServiceBus]\r\nFROM [Items]\r\nWHERE\r\n    operationCategory = 'UserManagement' OR\r\n    operationCategory = 'GroupManagement'"
+  },
+  "jobStreamingUnits": {
+    "value": 6
+  },
+  "inputName": {
+    "value": "EventHub"
+  },
+  "inputEventHubNamespace": {
+    "value": "<name of the input Event Hub namespace>"
+  },
+  "inputEventHubName": {
+    "value": "<name of the input Event Hub where Azure Active Directory Activity Logs are sent>"
+  },
+  "inputEventHubConsumerGroupName": {
+    "value": "<name of the Consumer Group used by the Stream Analytics job>"
+  },
+  "inputEventHubSharedAccessPolicyName": {
+    "value": "RootManageSharedAccessKey"
+  },
+  "inputEventHubSharedAccessPolicyKey": {
+    "value": "<key of the Event Hub Shared Access Policy e.g. RootManageSharedAccessKey>"
+  },
+  "outputName": {
+    "value": "ServiceBus"
+  },
+  "outputServiceBusNamespace": {
+    "value": "<name of the output Service Bus namespace>"
+  },
+  "outputServiceBusQueue": {
+    "value": "<name of the Service Bus queue where the Stream Analytics job writes results>"
+  },
+  "outputServiceBusSharedAccessPolicyName": {
+    "value": "RootManageSharedAccessKey"
+  },
+  "outputServiceBusSharedAccessPolicyKey": {
+    "value": "<key of the Service Bus Shared Access Policy e.g. RootManageSharedAccessKey>"
+  }
 }

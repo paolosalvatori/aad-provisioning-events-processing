@@ -1,176 +1,176 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "jobName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Stream Analytics job",
-                "defaultValue": "ProcessUserAndGroupEvents"
-            }
-        },
-        "jobLocation": {
-            "type": "string",
-            "metadata": {
-                "description": "Location of the Stream Analytics job",
-                "defaultValue": "West Europe"
-            }
-        },
-        "jobQuery": {
-            "type": "string",
-            "metadata": {
-                "description": "Query of the Stream Analytics job"
-            }
-        },
-        "jobStreamingUnits": {
-            "type": "int",
-            "metadata": {
-                "description": "Number of streaming units used by the Stream Analytics job",
-                "defaultValue": 6
-            }
-        },
-        "inputName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Stream Analytics input",
-                "defaultValue": "EventHub"
-            }
-        },
-        "inputEventHubNamespace": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Service Bus namespace containing the input event hub"
-            }
-        },
-        "inputEventHubName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the input event hub"
-            }
-        },
-        "inputEventHubConsumerGroupName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the consumer group used by the job to read data out of the input event hub",
-                "defaultValue": "$Default"
-            }
-        },
-        "inputEventHubSharedAccessPolicyName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Shared Access Policy of the input event hub"
-            }
-        },
-        "inputEventHubSharedAccessPolicyKey": {
-            "type": "string",
-            "metadata": {
-                "description": "Key of the Shared Access Policy of the input event hub"
-            }
-        },
-        "outputName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Stream Analytics output",
-                "defaultValue": "ServiceBus"
-            }
-        },
-        "outputServiceBusNamespace": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Service Bus namespace containing the output queue"
-            }
-        },
-        "outputServiceBusQueue": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the output queue"
-            }
-        },
-        "outputServiceBusSharedAccessPolicyName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Shared Access Policy of the output queue"
-            }
-        },
-        "outputServiceBusSharedAccessPolicyKey": {
-            "type": "string",
-            "metadata": {
-                "description": "Key of the Shared Access Policy of the output queue"
-            }
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "jobName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Stream Analytics job",
+        "defaultValue": "ProcessUserAndGroupEvents"
+      }
     },
-    "resources": [
-        {
-            "name": "[parameters('jobName')]",
-            "type": "Microsoft.StreamAnalytics/streamingjobs",
-            "apiVersion": "2016-03-01",
-            "location": "[parameters('jobLocation')]",
+    "jobLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of the Stream Analytics job",
+        "defaultValue": "West Europe"
+      }
+    },
+    "jobQuery": {
+      "type": "string",
+      "metadata": {
+        "description": "Query of the Stream Analytics job"
+      }
+    },
+    "jobStreamingUnits": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of streaming units used by the Stream Analytics job",
+        "defaultValue": 6
+      }
+    },
+    "inputName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Stream Analytics input",
+        "defaultValue": "EventHub"
+      }
+    },
+    "inputEventHubNamespace": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus namespace containing the input event hub"
+      }
+    },
+    "inputEventHubName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the input event hub"
+      }
+    },
+    "inputEventHubConsumerGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the consumer group used by the job to read data out of the input event hub",
+        "defaultValue": "$Default"
+      }
+    },
+    "inputEventHubSharedAccessPolicyName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Shared Access Policy of the input event hub"
+      }
+    },
+    "inputEventHubSharedAccessPolicyKey": {
+      "type": "string",
+      "metadata": {
+        "description": "Key of the Shared Access Policy of the input event hub"
+      }
+    },
+    "outputName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Stream Analytics output",
+        "defaultValue": "ServiceBus"
+      }
+    },
+    "outputServiceBusNamespace": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus namespace containing the output queue"
+      }
+    },
+    "outputServiceBusQueue": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the output queue"
+      }
+    },
+    "outputServiceBusSharedAccessPolicyName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Shared Access Policy of the output queue"
+      }
+    },
+    "outputServiceBusSharedAccessPolicyKey": {
+      "type": "string",
+      "metadata": {
+        "description": "Key of the Shared Access Policy of the output queue"
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('jobName')]",
+      "type": "Microsoft.StreamAnalytics/streamingjobs",
+      "apiVersion": "2016-03-01",
+      "location": "[parameters('jobLocation')]",
+      "properties": {
+        "sku": {
+          "name": "Standard"
+        },
+        "eventsOutOfOrderPolicy": "Adjust",
+        "eventsOutOfOrderMaxDelayInSeconds": 0,
+        "eventsLateArrivalMaxDelayInSeconds": 5,
+        "dataLocale": "en-US",
+        "inputs": [
+          {
+            "name": "[parameters('inputName')]",
+            "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
             "properties": {
-                "sku": {
-                    "name": "Standard"
-                },
-                "eventsOutOfOrderPolicy": "Adjust",
-                "eventsOutOfOrderMaxDelayInSeconds": 0,
-                "eventsLateArrivalMaxDelayInSeconds": 5,
-                "dataLocale": "en-US",
-                "inputs": [
-                    {
-                        "name": "[parameters('inputName')]",
-                        "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
-                        "properties": {
-                            "type": "Stream",
-                            "datasource": {
-                                "type": "Microsoft.ServiceBus/EventHub",
-                                "properties": {
-                                    "eventHubName": "[parameters('inputEventHubName')]",
-                                    "consumerGroupName": "[parameters('inputEventHubConsumerGroupName')]",
-                                    "serviceBusNamespace": "[parameters('inputEventHubNamespace')]",
-                                    "sharedAccessPolicyName": "[parameters('inputEventHubSharedAccessPolicyName')]",
-                                    "sharedAccessPolicyKey": "[parameters('inputEventHubSharedAccessPolicyKey')]"
-                                }
-                            },
-                            "serialization": {
-                                "type": "Json",
-                                "properties": {
-                                    "encoding": "UTF8"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "transformation": {
-                    "name": "Query",
-                    "type": "Microsoft.StreamAnalytics/streamingjobs/transformations",
-                    "properties": {
-                        "streamingUnits": "[parameters('jobStreamingUnits')]",
-                        "query": "[parameters('jobQuery')]"
-                    }
-                },
-                "outputs": [
-                    {
-                        "name": "[parameters('outputName')]",
-                        "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
-                        "properties": {
-                            "datasource": {
-                                "type": "Microsoft.ServiceBus/Queue",
-                                "properties": {
-                                    "queueName": "[parameters('outputServiceBusQueue')]",
-                                    "serviceBusNamespace": "[parameters('outputServiceBusNamespace')]",
-                                    "sharedAccessPolicyName": "[parameters('outputServiceBusSharedAccessPolicyName')]",
-                                    "sharedAccessPolicyKey": "[parameters('outputServiceBusSharedAccessPolicyKey')]"
-                                }
-                            },
-                            "serialization": {
-                                "type": "Json",
-                                "properties": {
-                                    "encoding": "UTF8",
-                                    "format": "LineSeparated"
-                                }
-                            }
-                        }
-                    }
-                ]
+              "type": "Stream",
+              "datasource": {
+                "type": "Microsoft.ServiceBus/EventHub",
+                "properties": {
+                  "eventHubName": "[parameters('inputEventHubName')]",
+                  "consumerGroupName": "[parameters('inputEventHubConsumerGroupName')]",
+                  "serviceBusNamespace": "[parameters('inputEventHubNamespace')]",
+                  "sharedAccessPolicyName": "[parameters('inputEventHubSharedAccessPolicyName')]",
+                  "sharedAccessPolicyKey": "[parameters('inputEventHubSharedAccessPolicyKey')]"
+                }
+              },
+              "serialization": {
+                "type": "Json",
+                "properties": {
+                  "encoding": "UTF8"
+                }
+              }
             }
-        }
-    ]
+          }
+        ],
+        "transformation": {
+          "name": "Query",
+          "type": "Microsoft.StreamAnalytics/streamingjobs/transformations",
+          "properties": {
+            "streamingUnits": "[parameters('jobStreamingUnits')]",
+            "query": "[parameters('jobQuery')]"
+          }
+        },
+        "outputs": [
+          {
+            "name": "[parameters('outputName')]",
+            "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+            "properties": {
+              "datasource": {
+                "type": "Microsoft.ServiceBus/Queue",
+                "properties": {
+                  "queueName": "[parameters('outputServiceBusQueue')]",
+                  "serviceBusNamespace": "[parameters('outputServiceBusNamespace')]",
+                  "sharedAccessPolicyName": "[parameters('outputServiceBusSharedAccessPolicyName')]",
+                  "sharedAccessPolicyKey": "[parameters('outputServiceBusSharedAccessPolicyKey')]"
+                }
+              },
+              "serialization": {
+                "type": "Json",
+                "properties": {
+                  "encoding": "UTF8",
+                  "format": "LineSeparated"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
