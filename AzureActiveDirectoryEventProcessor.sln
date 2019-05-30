@@ -14,6 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StreamAnalytics", "StreamAn
 		StreamAnalytics\deploy.sh = StreamAnalytics\deploy.sh
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{82D326F2-B37B-4AEE-8564-1348CC69087A}"
+	ProjectSection(SolutionItems) = preProject
+		Images\AzureActiveDirectoryDemo.png = Images\AzureActiveDirectoryDemo.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{14C24214-AD65-4E8E-BF09-6046B942D008}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
