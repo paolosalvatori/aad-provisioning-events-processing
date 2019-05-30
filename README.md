@@ -11,4 +11,4 @@ This sample shows how to process Azure Active Directory provisioning events stor
 ## Architecture
 The following picture shows the architecture design of the application.
 
-![Architecture](Images/Architecture.png)
+![Architecture](Images/AzureActiveDirectoryDemo.png)
