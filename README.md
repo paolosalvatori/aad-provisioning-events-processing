@@ -12,3 +12,5 @@ This sample shows how to process Azure Active Directory provisioning events stor
 The following picture shows the architecture design of the application.
 
 ![Architecture](Images/AzureActiveDirectoryDemo.png)
+
+I also created DevOps build and release pipelines to deploy both the Azure Function and Stream Analytics job. 
