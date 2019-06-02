@@ -148,6 +148,10 @@
                 "value": "6.5.0"
               },
               {
+                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                "value": "true"
+              },
+              {
                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                 "value": "[reference(resourceId('microsoft.insights/components/', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]"
               },
