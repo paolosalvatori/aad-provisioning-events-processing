@@ -2,16 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "resourceGroupName": {
+    "location": {
       "type": "string",
-      "defaultValue": "AADFunctionAppResourceGroup",
-      "metadata": {
-        "description": "The name of the resource group of the function app."
-      }
-    },
-    "resourceGroupLocation": {
-      "type": "string",
-      "defaultValue": "WestEurope",
+      "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "The location of the resource group of the function app."
       }
@@ -83,7 +76,6 @@
       "functionAppName": "[parameters('functionAppName')]",
       "hostingPlanName": "[parameters('functionAppName')]",
       "applicationInsightsName": "[parameters('functionAppName')]",
-      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
       "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
     },
     "resources": [
@@ -91,7 +83,7 @@
         "type": "Microsoft.Storage/storageAccounts",
         "name": "[parameters('storageAccountName')]",
         "apiVersion": "2016-12-01",
-        "location": "[parameters('resourceGroupLocation')]",
+        "location": "[parameters('location')]",
         "kind": "Storage",
         "sku": {
           "name": "Standard_LRS"
@@ -99,20 +91,29 @@
       },
       {
         "type": "Microsoft.Web/serverfarms",
-        "apiVersion": "2018-02-01",
+        "apiVersion": "2016-09-01",
         "name": "[variables('hostingPlanName')]",
-        "location": "[parameters('resourceGroupLocation')]",
+        "location": "[parameters('location')]",
+        "sku": {
+            "name": "Y1",
+            "tier": "Dynamic",
+            "size": "Y1",
+            "family": "Y",
+            "capacity": 0
+        },
+        "kind": "functionapp",
         "properties": {
-          "name": "[variables('hostingPlanName')]",
-          "computeMode": "Dynamic",
-          "sku": "Dynamic"
+            "perSiteScaling": false,
+            "reserved": false,
+            "targetWorkerCount": 0,
+            "targetWorkerSizeId": 0
         }
       },
       {
-        "apiVersion": "2018-02-01",
+        "apiVersion": "2016-08-01",
         "type": "Microsoft.Web/sites",
         "name": "[parameters('functionAppName')]",
-        "location": "[parameters('resourceGroupLocation')]",
+        "location": "[parameters('location')]",
         "kind": "functionapp",
         "dependsOn": [
           "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
@@ -189,8 +190,8 @@
       {
         "apiVersion": "2015-05-01",
         "name": "[variables('applicationInsightsName')]",
-        "type": "microsoft.Insights/components",
-        "location": "[parameters('resourceGroupLocation')]",
+        "type": "Microsoft.Insights/components",
+        "location": "[parameters('location')]",
         "tags": {
           "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('applicationInsightsName'))]": "Resource"
         },
