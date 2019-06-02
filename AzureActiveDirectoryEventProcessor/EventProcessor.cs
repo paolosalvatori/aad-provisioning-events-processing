@@ -25,10 +25,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.EventHubs;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -40,7 +38,7 @@ namespace Microsoft.AzureCat.Functions
 	public static class EventProcessor
     {
         #region Private Constants
-        private const string BodyCssStyle = "background:#E9F4DC; font:14px 'Calibri'; padding:20px;";
+        private const string BodyCssStyle = "background:#ECFEFE; font:14px 'Calibri'; padding:20px;";
         private const string PCssStyle = "font:14px 'Calibri'";
         private const string TableCssStyle = "width: 100%";
         private const string THeadTrCssStyle = "height:32px; background:#FFED86; padding-left:8px; font:14px 'Calibri';";
