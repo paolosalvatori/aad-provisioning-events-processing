@@ -31,9 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ARM", "ARM", "{EC2DF34A-BC7
 		ARM\functionApp.json = ARM\functionApp.json
 		ARM\functionApp.parameters.json = ARM\functionApp.parameters.json
 		ARM\functionApp.values.json = ARM\functionApp.values.json
-		ARM\resourceGroup.json = ARM\resourceGroup.json
-		ARM\resourceGroup.parameters.json = ARM\resourceGroup.parameters.json
-		ARM\resourceGroup.values.json = ARM\resourceGroup.values.json
 	EndProjectSection
 EndProject
 Global

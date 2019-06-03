@@ -5,8 +5,14 @@
   "functionAppName": {
     "value": "AzureActiveDirectoryFunctionApp"
   },
+  "runtime": {
+    "value": "dotnet"
+  },
   "storageAccountName": {
     "value": "<Storage Account Name>"
+  },
+  "storageAccountType": {
+    "value": "Standard_LRS"
   },
   "eventHubConnectionString": {
     "value": "<Event Hub Connection String>"

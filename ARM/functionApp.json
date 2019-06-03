@@ -16,11 +16,27 @@
         "description": "The name of the function app that you wish to create."
       }
     },
+    "runtime": {
+      "type": "string",
+      "defaultValue": "dotnet",
+      "allowedValues": [ "node", "dotnet", "java" ],
+      "metadata": {
+        "description": "The language worker runtime to load in the function app."
+      }
+    },
     "storageAccountName": {
       "type": "string",
       "defaultValue": "[toLower(concat(uniqueString(resourceGroup().id), 'azfunctions'))]",
       "metadata": {
         "description": "The name of the storage account used by the function app."
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [ "Standard_LRS", "Standard_GRS", "Standard_RAGRS" ],
+      "metadata": {
+        "description": "Storage Account type"
       }
     },
     "eventHubConnectionString": {
@@ -72,140 +88,139 @@
       }
     }
   },
-    "variables": {
-      "functionAppName": "[parameters('functionAppName')]",
-      "hostingPlanName": "[parameters('functionAppName')]",
-      "applicationInsightsName": "[parameters('functionAppName')]",
-      "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+  "variables": {
+    "functionAppName": "[parameters('functionAppName')]",
+    "hostingPlanName": "[parameters('functionAppName')]",
+    "applicationInsightsName": "[parameters('functionAppName')]",
+    "storageAccountName": "[parameters('storageAccountName')]",
+    "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+    "functionWorkerRuntime": "[parameters('runtime')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2016-12-01",
+      "location": "[parameters('location')]",
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
+      }
     },
-    "resources": [
-      {
-        "type": "Microsoft.Storage/storageAccounts",
-        "name": "[parameters('storageAccountName')]",
-        "apiVersion": "2016-12-01",
-        "location": "[parameters('location')]",
-        "kind": "Storage",
-        "sku": {
-          "name": "Standard_LRS"
-        }
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[variables('hostingPlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic"
       },
-      {
-        "type": "Microsoft.Web/serverfarms",
-        "apiVersion": "2016-09-01",
+      "properties": {
         "name": "[variables('hostingPlanName')]",
-        "location": "[parameters('location')]",
-        "sku": {
-            "name": "Y1",
-            "tier": "Dynamic",
-            "size": "Y1",
-            "family": "Y",
-            "capacity": 0
-        },
-        "kind": "functionapp",
-        "properties": {
-            "perSiteScaling": false,
-            "reserved": false,
-            "targetWorkerCount": 0,
-            "targetWorkerSizeId": 0
-        }
-      },
-      {
-        "apiVersion": "2016-08-01",
-        "type": "Microsoft.Web/sites",
-        "name": "[parameters('functionAppName')]",
-        "location": "[parameters('location')]",
-        "kind": "functionapp",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-        ],
-        "properties": {
-          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-          "siteConfig": {
-            "appSettings": [
-              {
-                "name": "AzureWebJobsDashboard",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
-              },
-              {
-                "name": "AzureWebJobsStorage",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
-              },
-              {
-                "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
-              },
-              {
-                "name": "WEBSITE_CONTENTSHARE",
-                "value": "[toLower(variables('functionAppName'))]"
-              },
-              {
-                "name": "FUNCTIONS_EXTENSION_VERSION",
-                "value": "~2"
-              },
-              {
-                "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                "value": "6.5.0"
-              },
-              {
-                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-                "value": "true"
-              },
-              {
-                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                "value": "[reference(resourceId('microsoft.insights/components/', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]"
-              },
-              {
-                "name": "EventHubConnectionString",
-                "value": "[parameters('eventHubConnectionString')]"
-              },
-              {
-                "name": "EventHub",
-                "value": "[parameters('eventHub')]"
-              },
-              {
-                "name": "ConsumerGroup",
-                "value": "[parameters('consumerGroup')]"
-              },
-              {
-                "name": "AzureActiveDirectoryName",
-                "value": "[parameters('azureActiveDirectoryName')]"
-              },
-              {
-                "name": "Debug",
-                "value": "[parameters('debug')]"
-              },
-              {
-                "name": "SendGridApiKey",
-                "value": "[parameters('sendGridApiKey')]"
-              },
-              {
-                "name": "FromEmailAddress",
-                "value": "[parameters('fromEmailAddress')]"
-              },
-              {
-                "name": "ToEmailAddress",
-                "value": "[parameters('toEmailAddress')]"
-              }
-            ]
-          }
-        }
-      },
-      {
-        "apiVersion": "2015-05-01",
-        "name": "[variables('applicationInsightsName')]",
-        "type": "Microsoft.Insights/components",
-        "location": "[parameters('location')]",
-        "tags": {
-          "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('applicationInsightsName'))]": "Resource"
-        },
-        "properties": {
-          "ApplicationId": "[variables('applicationInsightsName')]",
-          "Application_Type": "other",
-          "Flow_Type": "Redfield",
-          "Request_Source": "IbizaAIExtension"
+        "computeMode": "Dynamic"
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[parameters('functionAppName')]",
+      "location": "[parameters('location')]",
+      "kind": "functionapp",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(variables('functionAppName'))]"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "[variables('functionWorkerRuntime')]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~2"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "6.5.0"
+            },
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "false"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('microsoft.insights/components/', variables('applicationInsightsName')), '2015-05-01').InstrumentationKey]"
+            },
+            {
+              "name": "EventHubConnectionString",
+              "value": "[parameters('eventHubConnectionString')]"
+            },
+            {
+              "name": "EventHub",
+              "value": "[parameters('eventHub')]"
+            },
+            {
+              "name": "ConsumerGroup",
+              "value": "[parameters('consumerGroup')]"
+            },
+            {
+              "name": "AzureActiveDirectoryName",
+              "value": "[parameters('azureActiveDirectoryName')]"
+            },
+            {
+              "name": "Debug",
+              "value": "[parameters('debug')]"
+            },
+            {
+              "name": "SendGridApiKey",
+              "value": "[parameters('sendGridApiKey')]"
+            },
+            {
+              "name": "FromEmailAddress",
+              "value": "[parameters('fromEmailAddress')]"
+            },
+            {
+              "name": "ToEmailAddress",
+              "value": "[parameters('toEmailAddress')]"
+            }
+          ]
         }
       }
-    ]
-  }
+    },
+    {
+      "apiVersion": "2018-05-01-preview",
+      "name": "[variables('applicationInsightsName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "[parameters('location')]",
+      "tags": {
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('applicationInsightsName'))]": "Resource"
+      },
+      "properties": {
+        "ApplicationId": "[variables('applicationInsightsName')]",
+        "Request_Source": "IbizaWebAppExtensionCreate"
+      }
+    }
+  ]
+}
   
