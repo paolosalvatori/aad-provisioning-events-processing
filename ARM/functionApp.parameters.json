@@ -1,6 +1,6 @@
 {
   "location": {
-    "value": "West Europe"
+    "value": "WestEurope"
   },
   "functionAppName": {
     "value": "AzureActiveDirectoryFunctionApp"

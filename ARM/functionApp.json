@@ -100,7 +100,7 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
-      "apiVersion": "2016-12-01",
+      "apiVersion": "2018-02-01",
       "location": "[parameters('location')]",
       "kind": "Storage",
       "sku": {
@@ -166,7 +166,7 @@
             },
             {
               "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-              "value": "false"
+              "value": true
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
