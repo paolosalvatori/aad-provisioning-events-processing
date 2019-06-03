@@ -153,10 +153,6 @@
               "value": "[toLower(variables('functionAppName'))]"
             },
             {
-              "name": "WEBSITE_RUN_FROM_PACKAGE",
-              "value":  1
-            },
-            {
               "name": "FUNCTIONS_WORKER_RUNTIME",
               "value": "[variables('functionWorkerRuntime')]"
             },
